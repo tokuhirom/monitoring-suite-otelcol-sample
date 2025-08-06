@@ -65,20 +65,6 @@ processors:
   # https://github.com/open-telemetry/opentelemetry-collector/blob/main/processor/batchprocessor/README.md
   batch: {}
 
-  # resourcedetection でホスト名などの基本的な attribute を追加可能｡
-  # system と env を使うだけなら､'resource' を使うなら "${HOSTNAME}" などから拾っても良い｡
-  # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/resourcedetectionprocessor/README.md
-  resourcedetection:
-    detectors:
-      # OTEL_RESOURCE_ATTRIBUTES 変数の値を attribute に展開します
-      - env
-      # os.type, host.name を付与してくれる｡
-      # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/resourcedetectionprocessor/internal/system/documentation.md
-      # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/resourcedetectionprocessor/README.md#system-metadata
-      - system
-    timeout: 2s
-    override: false
-
   # resource で attribute を追加できます｡
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/resourceprocessor/README.md
   resource/add_attr:
@@ -155,7 +141,6 @@ service:
         - filelog
       processors:
         - resource/add_attr
-        - resourcedetection
         - transform/add_attrs_into_body
         - batch
       exporters:
@@ -168,7 +153,6 @@ service:
         - hostmetrics
       processors:
         - resource/add_attr
-        - resourcedetection
         - batch
       exporters:
         - debug
