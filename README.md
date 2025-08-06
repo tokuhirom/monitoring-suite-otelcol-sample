@@ -2,6 +2,8 @@
 
 さくらのクラウドのモニタリングスイートを otelcol で動かすサンプルです｡
 
+[otelcol-config.yaml](otelcol-config.yaml) を見てください｡
+
 ## Dependencies
 
  * Make
