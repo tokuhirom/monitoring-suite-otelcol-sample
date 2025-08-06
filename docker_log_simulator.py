@@ -2,7 +2,6 @@
 import json
 import time
 import random
-import os
 from datetime import datetime, timezone
 import uuid
 from pathlib import Path
