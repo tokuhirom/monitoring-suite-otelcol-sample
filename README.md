@@ -18,8 +18,8 @@ OpenTelemetry Collector（通称 otelcol）は、様々な形式のメトリク�
   - [目次](#目次)
   - [依存ツール](#依存ツール)
   - [セットアップ手順](#セットアップ手順)
-    - [1. バイナリ直接実行（macOS向け、または手動ダウンロード済みの場合）](#1-バイナリ直接実行macos向けまたは手動ダウンロード済みの場合)
-    - [2. Docker で実行](#2-docker-で実行)
+    - [1. Docker で実行（推奨）](#1-docker-で実行推奨)
+    - [2. ローカル実行（macOS/Linux, amd64/arm64 対応）](#2-ローカル実行macoslinux-amd64arm64-対応)
   - [サンプルスクリプトの使い方](#サンプルスクリプトの使い方)
     - [Dockerログのシミュレーター](#dockerログのシミュレーター)
     - [OTLPメトリクス送信スクリプト](#otlpメトリクス送信スクリプト)
@@ -63,30 +63,15 @@ OpenTelemetry Collector（通称 otelcol）は、様々な形式のメトリク�
    ```
 
 
-2. **otelcol の実行方法を選ぶ**
-
 otelcol-contrib の起動方法は2通りあります。どちらでも動作します。
 
-### 1. バイナリ直接実行（macOS向け、または手動ダウンロード済みの場合）
+2. **otelcol の実行方法（推奨: Docker, またはクロスプラットフォームスクリプト）**
 
-macOS の場合は `make` で自動ダウンロードされます。
-それ以外の環境では [公式リリース](https://github.com/open-telemetry/opentelemetry-collector-releases) から手動でダウンロードし、`otelcol-contrib` バイナリを配置してください。
+otelcol-contrib の起動は Docker を推奨します。ローカル実行したい場合はクロスプラットフォーム対応の `otelcol-contrib-launcher.sh` を用意しています。
 
-`.env` の内容を環境変数として読み込んで起動します:
+### 1. Docker で実行（推奨）
 
-```sh
-dotenv -f .env run ./otelcol-contrib --config=otelcol-config.yaml
-```
-
-または Makefile 経由で:
-
-```sh
-make
-```
-
-### 2. Docker で実行
-
-Docker イメージ（[ghcr.io/sacloud/sacloud-otel-collector](https://github.com/sacloud/sacloud-otel-collector)）を使う場合は、以下のように実行します。
+さくらのクラウドが提供するイメージ [ghcr.io/sacloud/sacloud-otel-collector](https://github.com/sacloud/sacloud-otel-collector) を使う場合:
 
 ```sh
 docker run --rm \
@@ -96,6 +81,16 @@ docker run --rm \
 ```
 
 `.env` ファイルを `--env-file` で渡すことで、必要な認証情報などが環境変数としてコンテナ内に渡されます。
+
+### 2. ローカル実行（macOS/Linux, amd64/arm64 対応）
+
+`otelcol-contrib-launcher.sh` を使うと、OS/アーキテクチャに応じて自動でバイナリをダウンロードし、.env を読み込んで起動します。
+
+```sh
+./otelcol-contrib-launcher.sh
+```
+
+> Windows の場合は WSL2 など Linux 環境での利用を推奨します。
 
 ---
 
