@@ -65,11 +65,11 @@ OpenTelemetry Collector（通称 otelcol）は、様々な形式のメトリク�
 
 otelcol-contrib の起動方法は2通りあります。どちらでも動作します。
 
-2. **otelcol の実行方法（推奨: Docker, またはクロスプラットフォームスクリプト）**
+2. **otelcol の実行方法**
 
-otelcol-contrib の起動は Docker を推奨します。ローカル実行したい場合はクロスプラットフォーム対応の `otelcol-contrib-launcher.sh` を用意しています。
+otelcol-contrib の起動は Docker イメージをご利用ください。
 
-### 1. Docker で実行（推奨）
+### Docker で実行（推奨）
 
 さくらのクラウドが提供するイメージ [ghcr.io/sacloud/sacloud-otel-collector](https://github.com/sacloud/sacloud-otel-collector) を使う場合:
 
@@ -81,16 +81,6 @@ docker run --rm \
 ```
 
 `.env` ファイルを `--env-file` で渡すことで、必要な認証情報などが環境変数としてコンテナ内に渡されます。
-
-### 2. ローカル実行（macOS/Linux, amd64/arm64 対応）
-
-`otelcol-contrib-launcher.sh` を使うと、OS/アーキテクチャに応じて自動でバイナリをダウンロードし、.env を読み込んで起動します。
-
-```sh
-./otelcol-contrib-launcher.sh
-```
-
-> Windows の場合は WSL2 など Linux 環境での利用を推奨します。
 
 ---
 
