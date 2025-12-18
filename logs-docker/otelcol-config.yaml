@@ -18,7 +18,6 @@ receivers:
           layout: '%Y-%m-%dT%H:%M:%S.%fZ'
           location: Asia/Tokyo
 
-      # 4. コンテナIDをファイル名から抽出
       - type: regex_parser
         id: extract_container_id
         parse_from: attributes["log.file.name"]
