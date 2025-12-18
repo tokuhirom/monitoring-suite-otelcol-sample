@@ -8,7 +8,7 @@ receivers:
     include_file_path: true
     operators:
       - type: json_parser
-        id: nginx_json_parser
+        id: nginx_accesslog_json_parser
         parse_from: body
         parse_to: body
         parse_ints: true # 数値を値によって適切な型（int or double）で扱う（デフォルトでは数値は全て double になる）
@@ -17,6 +17,39 @@ receivers:
           layout_type: strptime
           layout: '%Y-%m-%dT%H:%M:%S%j'
           # location: Asia/Tokyo
+
+  filelog/nginx_errorlog:
+    include:
+      - '/var/log/nginx/error.log'
+    exclude: []
+    start_at: end
+    include_file_name: true
+    include_file_path: true
+    operators:
+      # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/pkg/stanza/docs/operators/regex_parser.md
+      - type: regex_parser
+        id: nginx_errorlog_regex_parser
+        regex: '^(?P<time>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}) \[(?P<level>[^\]]+)\] (?P<pid>\d+)#(?P<tid>\d+): (?P<message>.*)$'
+        parse_to: body
+        timestamp:
+          parse_from: body["time"]
+          layout: '%Y/%m/%d %H:%M:%S'
+      # nginx のレベルは以下｡
+      # https://nginx.org/en/docs/ngx_core_module.html
+      # debug, info, notice, warn, error, crit, alert, or emerg
+      # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/pkg/stanza/docs/operators/severity_parser.md
+      # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/pkg/stanza/docs/types/severity.md
+      - type: severity_parser
+        parse_from: body["level"]
+        mapping:
+          debug: debug
+          info: info
+          info2: notice
+          warn: warn
+          error: error
+          fatal: crit
+          fatal2: alert
+          fatal3: emerg
 
 processors:
   # https://github.com/open-telemetry/opentelemetry-collector/blob/main/processor/batchprocessor/README.md
@@ -29,12 +62,18 @@ processors:
     error_mode: ignore
     log_statements:
       - set(log.body["time"], FormatTime(log.time, "%Y-%m-%dT%H:%M:%S.%sZ"))
-  transform/set_monitoring_suite_log_name:
+
+  transform/set_accesslog_name:
     log_statements:
       - context: log
         statements:
-          # - set(body["log_name"], log.body["log.file.name"])
-          - set(body["log_name"], "nginx")
+          - set(log.body["log_name"], "nginx-access.log")
+
+  transform/set_errorlog_name:
+    log_statements:
+      - context: log
+        statements:
+          - set(log.body["log_name"], "nginx-error.log")
 
 exporters:
   # ログの exporter
@@ -48,6 +87,8 @@ exporters:
       Authorization: "Bearer ${SAKURA_MONITORINGSUITE_LOGS_CREDENTIALS}"
     timeout: 30s
 
+  debug:
+    verbosity: detailed
 
 service:
   # otel 全体のログレベルはここで制御可能
@@ -57,12 +98,22 @@ service:
         # level: debug
 
   pipelines:
-    logs/otlp:
+    logs/nginx_accesslog:
       receivers:
         - filelog/nginx_accesslog
       processors:
         - transform/set_timestamp
-        - transform/set_monitoring_suite_log_name
+        - transform/set_accesslog_name
+        - batch
+      exporters:
+        - otlphttp/logs
+
+    logs/nginx_errorlog:
+      receivers:
+        - filelog/nginx_errorlog
+      processors:
+        - transform/set_timestamp
+        - transform/set_errorlog_name
         - batch
       exporters:
         - otlphttp/logs
