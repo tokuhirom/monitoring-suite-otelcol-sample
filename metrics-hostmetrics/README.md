@@ -8,7 +8,7 @@
 
 環境変数は以下のように取得してください｡
 
-![alt text](metrics-settings.png)
+![alt text](../metrics-settings.png)
 
 必要な環境変数は外部から渡してください。
 

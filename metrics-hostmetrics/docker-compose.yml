@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   otelcol:
     image: ghcr.io/sacloud/sacloud-otel-collector:v0.3.8

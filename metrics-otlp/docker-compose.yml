@@ -1,0 +1,24 @@
+services:
+  otelcol:
+    image: ghcr.io/sacloud/sacloud-otel-collector:v0.3.8
+    environment:
+      - SAKURA_MONITORINGSUITE_METRICS_ENDPOINT
+      - SAKURA_MONITORINGSUITE_METRICS_CREDENTIALS
+    volumes:
+      - ./otelcol-config.yaml:/etc/otelcol/config.yaml:ro
+    command: ["--config", "/etc/otelcol/config.yaml"]
+
+  # OTLP Receiver へのメトリクス送信を確認するためのサンプル送信元
+  sample-metrics-sender:
+    image: ghcr.io/astral-sh/uv:debian
+    command:
+      - uv
+      - run
+      - /app/otlp_send_metrics.py
+      - --host=otelcol
+      - --port=4319
+      - --insecure
+    volumes:
+      - ./otlp_send_metrics.py:/app/otlp_send_metrics.py:ro
+    depends_on:
+      - otelcol
