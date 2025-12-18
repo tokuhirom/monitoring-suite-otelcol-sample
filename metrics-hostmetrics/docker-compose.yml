@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  otelcol:
+    image: ghcr.io/sacloud/sacloud-otel-collector:v0.3.8
+    environment:
+      - SAKURA_MONITORINGSUITE_METRICS_ENDPOINT
+      - SAKURA_MONITORINGSUITE_METRICS_CREDENTIALS
+    volumes:
+      - ./otelcol-config.yaml:/etc/otelcol/config.yaml:ro
+    command: ["--config", "/etc/otelcol/config.yaml"]

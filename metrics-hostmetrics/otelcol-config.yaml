@@ -1,0 +1,65 @@
+receivers:
+  # sample なので､otelcol のコンテナのメトリクスを送っています｡実際にはホスト側の /proc/ をマウントする必要があります｡
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/hostmetricsreceiver/README.md
+  hostmetrics:
+    collection_interval: 1m
+    scrapers:
+      cpu:
+      memory:
+      disk:
+      filesystem:
+      load:
+      network:
+      processes:
+      system:
+
+processors:
+  # データをまとめてくれる｡ほぼ必須｡
+  # https://github.com/open-telemetry/opentelemetry-collector/blob/main/processor/batchprocessor/README.md
+  batch:
+    timeout: 5s
+    send_batch_size: 2048
+    send_batch_max_size: 4096
+
+  # resource で attribute を追加できます｡
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/processor/resourceprocessor/README.md
+  resource/add_attr:
+    attributes:
+      - key: sample.name
+        value: "my-service"
+        action: insert
+
+exporters:
+  # メトリクスの exporter
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/exporter/prometheusremotewriteexporter/README.md
+  prometheusremotewrite/metrics:
+    # メトリクスははエンドポイントの URL がフルに必要
+    endpoint: "https://${SAKURA_MONITORINGSUITE_METRICS_ENDPOINT}/prometheus/api/v1/write"
+    # Authorization ヘッダを付与します｡
+    headers:
+      Authorization: "Bearer ${SAKURA_MONITORINGSUITE_METRICS_CREDENTIALS}"
+    # all the resource attributes will be converted to metric labels by default.
+    resource_to_telemetry_conversion:
+      enabled: true
+    # ラベルを prometheusremotewrite で付与することも可能
+    external_labels:
+      region: "tokyo"
+
+
+service:
+  # otel 全体のログレベルはここで制御可能
+  telemetry:
+    logs:
+      level: info
+        # level: debug
+
+  pipelines:
+    # メトリクスパイプライン
+    metrics/hostmetrics:
+      receivers:
+        - hostmetrics
+      processors:
+        - resource/add_attr
+        - batch
+      exporters:
+        - prometheusremotewrite/metrics

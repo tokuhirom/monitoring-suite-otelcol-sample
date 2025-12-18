@@ -18,8 +18,7 @@ OpenTelemetry Collector（通称 otelcol）は、様々な形式のメトリク�
   - [目次](#目次)
   - [依存ツール](#依存ツール)
   - [セットアップ手順](#セットアップ手順)
-    - [1. Docker で実行（推奨）](#1-docker-で実行推奨)
-    - [2. ローカル実行（macOS/Linux, amd64/arm64 対応）](#2-ローカル実行macoslinux-amd64arm64-対応)
+    - [Docker で実行（推奨）](#docker-で実行推奨)
   - [サンプルスクリプトの使い方](#サンプルスクリプトの使い方)
     - [Dockerログのシミュレーター](#dockerログのシミュレーター)
     - [OTLPメトリクス送信スクリプト](#otlpメトリクス送信スクリプト)
@@ -33,8 +32,8 @@ OpenTelemetry Collector（通称 otelcol）は、様々な形式のメトリク�
 ## 依存ツール
 
 - Make
-- [python-dotenv](https://pypi.org/project/python-dotenv/)
-- [uv](https://docs.astral.sh/uv/)（Pythonパッケージ管理・実行ツール）
+- docker-compose
+
 
 ## セットアップ手順
 
