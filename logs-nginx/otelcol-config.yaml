@@ -1,26 +1,22 @@
 receivers:
-  filelog:
+  filelog/nginx_accesslog:
     include:
-      - '/logs/*/*-json.log'
+      - '/var/log/nginx/access.log'
     exclude: []
     start_at: end
     include_file_name: true
     include_file_path: true
     operators:
       - type: json_parser
-        id: docker_json_parser
+        id: nginx_json_parser
         parse_from: body
         parse_to: body
         parse_ints: true # 数値を値によって適切な型（int or double）で扱う（デフォルトでは数値は全て double になる）
         timestamp:
           parse_from: body["time"]
           layout_type: strptime
-          layout: '%Y-%m-%dT%H:%M:%S.%fZ'
-
-      - type: regex_parser
-        id: extract_container_id
-        parse_from: attributes["log.file.name"]
-        regex: '^(?P<container_id>[a-f0-9]+)-json\.log$'
+          layout: '%Y-%m-%dT%H:%M:%S%j'
+          # location: Asia/Tokyo
 
 processors:
   # https://github.com/open-telemetry/opentelemetry-collector/blob/main/processor/batchprocessor/README.md
@@ -37,9 +33,8 @@ processors:
     log_statements:
       - context: log
         statements:
-          - set(body["log_name"], "logs-docker")
-          - set(log.body["__labels"]["stream"], log.body["stream"])
-          - delete_key(log.body, "stream")
+          # - set(body["log_name"], log.body["log.file.name"])
+          - set(body["log_name"], "nginx")
 
 exporters:
   # ログの exporter
@@ -64,7 +59,7 @@ service:
   pipelines:
     logs/otlp:
       receivers:
-        - filelog
+        - filelog/nginx_accesslog
       processors:
         - transform/set_timestamp
         - transform/set_monitoring_suite_log_name

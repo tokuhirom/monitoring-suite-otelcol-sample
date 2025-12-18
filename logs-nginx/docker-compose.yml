@@ -1,0 +1,39 @@
+services:
+  otelcol:
+    image: ghcr.io/sacloud/sacloud-otel-collector:v0.3.8
+    environment:
+      - SAKURA_MONITORINGSUITE_LOGS_ENDPOINT
+      - SAKURA_MONITORINGSUITE_LOGS_CREDENTIALS
+    volumes:
+      - ./otelcol-config.yaml:/etc/otelcol/config.yaml:ro
+      - nginx_logs:/var/log/nginx/:ro
+    command: ["--config", "/etc/otelcol/config.yaml"]
+
+  nginx:
+    build: .
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - nginx_logs:/var/log/nginx/
+      - ./init.sh:/docker-entrypoint.d/init.sh:ro
+    depends_on:
+      - otelcol
+
+  # nginx にアクセスするスクリプト
+  client:
+    image: ghcr.io/astral-sh/uv:debian
+    command:
+      - uv
+      - run
+      - --script
+      - "/client.py"
+    volumes:
+      - ./client.py:/client.py:ro
+    depends_on:
+      - nginx
+
+  # debug-httpd
+  debug-httpd:
+    image: ghcr.io/tokuhirom/debug-httpd:0.0.4
+
+volumes:
+  nginx_logs:
