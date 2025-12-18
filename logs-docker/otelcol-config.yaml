@@ -1,0 +1,75 @@
+receivers:
+  filelog:
+    include:
+      - '/logs/*/*-json.log'
+    exclude: []
+    start_at: end
+    include_file_name: true
+    include_file_path: true
+    operators:
+      - type: json_parser
+        id: docker_json_parser
+        parse_from: body
+        parse_to: body
+        parse_ints: true # 数値を値によって適切な型（int or double）で扱う（デフォルトでは数値は全て double になる）
+        timestamp:
+          parse_from: body["time"]
+          layout_type: strptime
+          layout: '%Y-%m-%dT%H:%M:%S.%fZ'
+          location: Asia/Tokyo
+
+      # 4. コンテナIDをファイル名から抽出
+      - type: regex_parser
+        id: extract_container_id
+        parse_from: attributes["log.file.name"]
+        regex: '^(?P<container_id>[a-f0-9]+)-json\.log$'
+
+processors:
+  # https://github.com/open-telemetry/opentelemetry-collector/blob/main/processor/batchprocessor/README.md
+  batch:
+    timeout: 5s
+    send_batch_size: 2048
+    send_batch_max_size: 4096
+
+  transform/set_timestamp:
+    error_mode: ignore
+    log_statements:
+      - set(log.body["time"], FormatTime(log.time, "%Y-%m-%dT%H:%M:%S.%sZ"))
+  transform/set_monitoring_suite_log_name:
+    log_statements:
+      - context: log
+        statements:
+          - set(body["log_name"], "logs-docker")
+          - set(log.body["__labels"]["stream"], log.body["stream"])
+          - delete_key(log.body, "stream")
+
+exporters:
+  # ログの exporter
+  # https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/otlphttpexporter/README.md
+  otlphttp/logs:
+    # endpoint にパスが不要なことに注意｡otelcol が自動的に /v1/logs を追加してリクエストします｡
+    endpoint: "https://${SAKURA_MONITORINGSUITE_LOGS_ENDPOINT}"
+    # Authorization ヘッダを付与します｡
+    # ref. https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/extension/basicauthextension/README.md
+    headers:
+      Authorization: "Bearer ${SAKURA_MONITORINGSUITE_LOGS_CREDENTIALS}"
+    timeout: 30s
+
+
+service:
+  # otel 全体のログレベルはここで制御可能
+  telemetry:
+    logs:
+      level: info
+        # level: debug
+
+  pipelines:
+    logs/otlp:
+      receivers:
+        - filelog
+      processors:
+        - transform/set_timestamp
+        - transform/set_monitoring_suite_log_name
+        - batch
+      exporters:
+        - otlphttp/logs

@@ -1,0 +1,27 @@
+services:
+  otelcol:
+    image: ghcr.io/sacloud/sacloud-otel-collector:v0.3.8
+    environment:
+      - SAKURA_MONITORINGSUITE_LOGS_ENDPOINT
+      - SAKURA_MONITORINGSUITE_LOGS_CREDENTIALS
+    volumes:
+      - ./otelcol-config.yaml:/etc/otelcol/config.yaml:ro
+      - logs:/logs
+    command: ["--config", "/etc/otelcol/config.yaml"]
+
+  # Docker のログを模したファイルを生成するスクリプト
+  docker-like-log-generator:
+    image: ghcr.io/astral-sh/uv:debian
+    command:
+      - uv
+      - run
+      - /app/docker_like_log_generator.py
+      - --output-dir=/logs
+    volumes:
+      - ./docker_like_log_generator.py:/app/docker_like_log_generator.py:ro
+      - logs:/logs
+    depends_on:
+      - otelcol
+
+volumes:
+  logs:

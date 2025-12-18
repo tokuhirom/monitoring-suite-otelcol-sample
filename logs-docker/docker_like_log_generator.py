@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
+
 import json
 import time
 import random
 from datetime import datetime, timezone
 import uuid
 from pathlib import Path
+import argparse
 
 # ログメッセージ用の単語リスト
 WORDS = [
@@ -220,11 +222,21 @@ def generate_docker_log_entry():
 
 
 def main():
+    print("Docker-like Log Generator")
+    parser = argparse.ArgumentParser(description="Docker-like log generator")
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        default="logs/containers",
+        help="ログの出力先ディレクトリ (デフォルト: logs/containers)",
+    )
+    args = parser.parse_args()
+
     # コンテナIDを生成（実際のDockerコンテナIDっぽく）
     container_id = "".join(random.choices("0123456789abcdef", k=64))
 
     # ログディレクトリを作成（mkdir -p 相当）
-    log_dir = Path("logs/containers") / container_id
+    log_dir = Path(args.output_dir) / container_id
     log_dir.mkdir(parents=True, exist_ok=True)
 
     log_file_path = log_dir / f"{container_id}-json.log"
