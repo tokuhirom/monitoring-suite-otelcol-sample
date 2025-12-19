@@ -25,7 +25,7 @@ exporters:
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/exporter/prometheusremotewriteexporter/README.md
   prometheusremotewrite/metrics:
     # メトリクスははエンドポイントの URL がフルに必要
-    endpoint: "https://${SAKURA_MONITORINGSUITE_METRICS_ENDPOINT}/prometheus/api/v1/write"
+    endpoint: "${SAKURA_MONITORINGSUITE_METRICS_ENDPOINT}/prometheus/api/v1/write"
     # Authorization ヘッダを付与します｡
     headers:
       Authorization: "Bearer ${SAKURA_MONITORINGSUITE_METRICS_CREDENTIALS}"

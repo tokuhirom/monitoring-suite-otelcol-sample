@@ -33,14 +33,15 @@ exporters:
   # メトリクスの exporter
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/exporter/prometheusremotewriteexporter/README.md
   prometheusremotewrite/metrics:
-    # メトリクスははエンドポイントの URL がフルに必要
-    endpoint: "https://${SAKURA_MONITORINGSUITE_METRICS_ENDPOINT}/prometheus/api/v1/write"
+    endpoint: "${env:SAKURA_MONITORINGSUITE_METRICS_ENDPOINT}"
     # Authorization ヘッダを付与します｡
     headers:
-      Authorization: "Bearer ${SAKURA_MONITORINGSUITE_METRICS_CREDENTIALS}"
+      Authorization: "Bearer ${env:SAKURA_MONITORINGSUITE_METRICS_CREDENTIALS}"
     # all the resource attributes will be converted to metric labels by default.
     resource_to_telemetry_conversion:
       enabled: true
+    tls:
+      insecure: ${env:SAKURA_MONITORINGSUITE_METRICS_INSECURE:-false}
     # ラベルを prometheusremotewrite で付与することも可能
     external_labels:
       region: "tokyo"

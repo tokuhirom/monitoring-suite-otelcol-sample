@@ -1,0 +1,13 @@
+# Prometheus configuration for testing
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+# Remote Write を受け付ける設定は Prometheus 自体では不要
+# Prometheus は /api/v1/write エンドポイントでデフォルトで Remote Write を受け付けます
+
+# スクレイプ設定（Prometheus 自体のメトリクス）
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']

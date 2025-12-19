@@ -30,7 +30,7 @@ OpenTelemetry Collector（通称 otelcol）は、様々な形式のメトリク�
 ファイルの中身は以下のように記述します｡
 
 ```ini
-SAKURA_MONITORINGSUITE_METRICS_ENDPOINT=***.metrics.monitoring.global.api.sacloud.jp
+SAKURA_MONITORINGSUITE_METRICS_ENDPOINT=https://***.metrics.monitoring.global.api.sacloud.jp/prometheus
 SAKURA_MONITORINGSUITE_METRICS_CREDENTIALS=met-***-***
 
 SAKURA_MONITORINGSUITE_LOGS_ENDPOINT=***.logs.monitoring.global.api.sacloud.jp
