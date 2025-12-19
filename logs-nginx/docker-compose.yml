@@ -32,7 +32,7 @@ services:
 
   # debug-httpd
   debug-httpd:
-    image: ghcr.io/tokuhirom/debug-httpd:0.0.4
+    image: ghcr.io/tokuhirom/debug-httpd:0.0.6
 
 volumes:
   nginx_logs:

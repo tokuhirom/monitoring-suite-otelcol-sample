@@ -12,9 +12,11 @@ import socket
 
 URLS = [
     "http://nginx/",
-    "http://nginx/sleep?duration=1s",
-    "http://nginx/sleep?duration=300ms",
-    "http://nginx/sleep?duration=500ms",
+    "http://nginx/sleep/1s",
+    "http://nginx/sleep/300ms",
+    "http://nginx/sleep/500ms",
+    "http://nginx/status/500",
+    "http://nginx/status/404",
 ]
 
 def send_malformed(host: str, port: int):
