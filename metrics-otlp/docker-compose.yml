@@ -4,6 +4,7 @@ services:
     environment:
       - SAKURA_MONITORINGSUITE_METRICS_ENDPOINT
       - SAKURA_MONITORINGSUITE_METRICS_CREDENTIALS
+      - SAKURA_MONITORINGSUITE_METRICS_INSECURE
     volumes:
       - ./otelcol-config.yaml:/etc/otelcol/config.yaml:ro
     command: ["--config", "/etc/otelcol/config.yaml"]
@@ -22,3 +23,19 @@ services:
       - ./otlp_send_metrics.py:/app/otlp_send_metrics.py:ro
     depends_on:
       - otelcol
+
+  # ローカルテスト用 Prometheus (Remote Write を受信)
+  prometheus:
+    image: prom/prometheus:latest
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-remote-write-receiver'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    profiles:
+      - test  # テスト時のみ起動
