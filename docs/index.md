@@ -1,4 +1,4 @@
-# monitoring-suite-otelcol-sample
+# Monitoring Suite otelcol Samples
 
 さくらのクラウドのモニタリングスイートに [OpenTelemetry Collector（otelcol）](https://opentelemetry.io/docs/collector/) でログ･メトリクスを送信するため設定ファイルのサンプルです｡
 
@@ -27,7 +27,7 @@ OpenTelemetry Collector（通称 otelcol）は、様々な形式のメトリク�
 
 ![alt text](logs-settings.png)
 
-ファイルの中身は以下のように記述します｡
+`.env` ファイルの中身は以下のように記述します｡
 
 ```ini
 SAKURA_MONITORINGSUITE_METRICS_ENDPOINT=https://***.metrics.monitoring.global.api.sacloud.jp/prometheus
@@ -36,15 +36,3 @@ SAKURA_MONITORINGSUITE_METRICS_CREDENTIALS=met-***-***
 SAKURA_MONITORINGSUITE_LOGS_ENDPOINT=***.logs.monitoring.global.api.sacloud.jp
 SAKURA_MONITORINGSUITE_LOGS_CREDENTIALS=log-***-***
 ```
-
-## 実装済みのサンプル
-
-現在､以下のようなサンプルコードが設置されています｡
-
-- logs-docker: Docker のログを転送する例
-- metrics-hostmetrics: hostmetrics を送信する例
-- metrics-otlp: OTLP で受信したメトリクスを送信する例
-
-## LICENSE
-
-See LICENSE file.

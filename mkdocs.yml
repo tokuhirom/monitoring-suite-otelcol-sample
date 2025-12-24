@@ -1,0 +1,17 @@
+site_name: OpenTelemetryCollector でさくらのクラウドのモニタリングスイートに送信するためのサンプル集
+nav:
+    - Home: index.md
+    - ホストメトリクスを送信する: metrics-hostmetrics/README.md
+    - OTLP で受信したメトリクスを送信する: metrics-otlp/README.md
+    - Docker ログを送信する: logs-docker/README.md
+    - Nginx ログを送信する: logs-nginx/README.md
+
+markdown_extensions:
+    - pymdownx.snippets:
+        base_path: docs/
+
+theme:
+  name: readthedocs
+  highlightjs: true
+  hljs_languages:
+    - yaml

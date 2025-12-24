@@ -23,5 +23,14 @@ services:
     depends_on:
       - otelcol
 
+  otlp-receiver:
+    image: ghcr.io/sacloud/sacloud-otel-collector:v0.3.8
+    volumes:
+      - ../tests/otlp-receiver-otelcol-config.yaml:/etc/otelcol/config.yaml:ro
+      - filelogs:/filelogs
+    command: ["--config", "/etc/otelcol/config.yaml"]
+
 volumes:
   logs:
+  filelogs:
+

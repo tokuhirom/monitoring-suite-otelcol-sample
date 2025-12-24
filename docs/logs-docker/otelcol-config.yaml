@@ -47,20 +47,14 @@ exporters:
   otlphttp/logs:
     # endpoint にパスが不要なことに注意｡otelcol が自動的に /v1/logs を追加してリクエストします｡
     endpoint: "https://${SAKURA_MONITORINGSUITE_LOGS_ENDPOINT}"
-    # Authorization ヘッダを付与します｡
-    # ref. https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/extension/basicauthextension/README.md
     headers:
       Authorization: "Bearer ${SAKURA_MONITORINGSUITE_LOGS_CREDENTIALS}"
     timeout: 30s
+  file:
+    path: /filelogs
 
 
 service:
-  # otel 全体のログレベルはここで制御可能
-  telemetry:
-    logs:
-      level: info
-        # level: debug
-
   pipelines:
     logs/otlp:
       receivers:

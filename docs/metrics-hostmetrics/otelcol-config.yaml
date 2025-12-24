@@ -1,11 +1,20 @@
 receivers:
-  otlp:
-    protocols:
-      grpc:
-        endpoint: "0.0.0.0:4319"
+  # sample なので､otelcol のコンテナのメトリクスを送っています｡実際にはホスト側の /proc/ をマウントする必要があります｡
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/hostmetricsreceiver/README.md
+  hostmetrics:
+    collection_interval: 1m
+    scrapers:
+      cpu:
+      memory:
+      disk:
+      filesystem:
+      load:
+      network:
+      processes:
+      system:
 
 processors:
-  # データをまとめてくれる｡ほぼ必須｡
+  # データをまとめて送る
   # https://github.com/open-telemetry/opentelemetry-collector/blob/main/processor/batchprocessor/README.md
   batch:
     timeout: 5s
@@ -17,14 +26,13 @@ processors:
   resource/add_attr:
     attributes:
       - key: sample.name
-        value: "metrics-otlp"
+        value: "my-service"
         action: insert
 
 exporters:
   # メトリクスの exporter
   # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/exporter/prometheusremotewriteexporter/README.md
   prometheusremotewrite/metrics:
-    # メトリクスはエンドポイントの URL がフルに必要なことに注意
     endpoint: "${env:SAKURA_MONITORINGSUITE_METRICS_ENDPOINT}"
     # Authorization ヘッダを付与します｡
     headers:
@@ -32,26 +40,18 @@ exporters:
     # all the resource attributes will be converted to metric labels by default.
     resource_to_telemetry_conversion:
       enabled: true
-    # TLS 設定（SAKURA_MONITORINGSUITE_METRICS_INSECURE=true の場合は insecure を true に）
     tls:
-      insecure: ${env:SAKURA_MONITORINGSUITE_METRICS_INSECURE:-false}
+      insecure: ${env:TLS_INSECURE:-false} # テスト用
     # ラベルを prometheusremotewrite で付与することも可能
     external_labels:
       region: "tokyo"
 
 
 service:
-  # otel 全体のログレベルはここで制御可能
-  telemetry:
-    logs:
-      level: info
-        # level: debug
-
   pipelines:
-    # メトリクスパイプライン
-    metrics/otlp:
+    metrics/hostmetrics:
       receivers:
-        - otlp
+        - hostmetrics
       processors:
         - resource/add_attr
         - batch
