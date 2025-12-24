@@ -1,6 +1,12 @@
-# logs-docker
+# Docker の JSON ログを送信する
 
 Docker の json ログを､さくらのクラウドのモニタリングスイートに送信するサンプルです｡
+
+## otelcol 設定例
+
+```yaml
+--8<-- "logs-docker/otelcol-config.yaml"
+```
 
 ## 実行
 
