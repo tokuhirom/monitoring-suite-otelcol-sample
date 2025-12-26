@@ -41,9 +41,10 @@ SAKURA_MONITORINGSUITE_LOGS_CREDENTIALS=log-***-***
 
 現在､以下のようなサンプルコードが設置されています｡
 
-- logs-docker: Docker のログを転送する例
 - metrics-hostmetrics: hostmetrics を送信する例
 - metrics-otlp: OTLP で受信したメトリクスを送信する例
+- logs-docker: Docker のログを転送する例
+- logs-nginx: nginx のログを転送する例
 
 ## LICENSE
 
