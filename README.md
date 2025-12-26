@@ -1,17 +1,11 @@
-# monitoring-suite-otelcol-sample
+# ｢さくらのクラウドのモニタリングスイートにotelcolで送信する本｣のサンプルコード集
 
-さくらのクラウドのモニタリングスイートに [OpenTelemetry Collector（otelcol）](https://opentelemetry.io/docs/collector/) でログ･メトリクスを送信するため設定ファイルのサンプルです｡
-
-## OpenTelemetry Collector（otelcol）とは？
-
-OpenTelemetry Collector（通称 otelcol）は、様々な形式のメトリクスやログ、トレースデータを受け取り、変換・集約・エクスポートできるOSSのデータコレクターです。
-クラウドやオンプレミス環境での監視・observability を実現するための中心的なコンポーネントです。
-
-このリポジトリは、さくらのクラウドのモニタリングスイートと連携するための設定例や、テスト用のデータ送信スクリプトを含みます。
+[さくらのクラウドのモニタリングスイートにotelcolで送信する本](https://zenn.dev/tokuhirom/books/7c2c7820b2c36c) のサンプルコードです｡
 
 ## 依存ツール
 
 - docker-compose
+- dotenv
 
 ## セットアップ手順
 
