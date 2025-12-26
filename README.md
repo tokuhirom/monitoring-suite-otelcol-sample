@@ -21,11 +21,11 @@ OpenTelemetry Collector（通称 otelcol）は、様々な形式のメトリク�
 
 メトリクスの設定情報は以下のように取得してください｡
 
-![alt text](metrics-settings.png)
+![alt text](images/metrics-settings.png)
 
 ログの設定情報は以下のように取得してください｡
 
-![alt text](logs-settings.png)
+![alt text](images/logs-settings.png)
 
 ファイルの中身は以下のように記述します｡
 
