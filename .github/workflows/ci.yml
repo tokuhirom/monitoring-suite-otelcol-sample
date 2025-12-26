@@ -21,7 +21,7 @@ jobs:
         uses: astral-sh/setup-uv@v7
 
       - name: metrics-otlp
-        run: cd docs/metrics-otlp && ./test.sh
+        run: cd metrics-otlp && ./test.sh
 
       - name: metrics-hostmetrics
-        run: cd docs/metrics-hostmetrics && ./test.sh
+        run: cd metrics-hostmetrics && ./test.sh
