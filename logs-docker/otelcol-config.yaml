@@ -16,6 +16,7 @@ receivers:
           parse_from: body["time"]
           layout_type: strptime
           layout: '%Y-%m-%dT%H:%M:%S.%fZ'
+          location: Asia/Tokyo
 
       - type: regex_parser
         id: extract_container_id
