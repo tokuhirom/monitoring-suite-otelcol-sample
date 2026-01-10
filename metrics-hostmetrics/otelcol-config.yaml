@@ -31,20 +31,11 @@ processors:
 
 exporters:
   # メトリクスの exporter
-  # https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/exporter/prometheusremotewriteexporter/README.md
-  prometheusremotewrite/metrics:
-    endpoint: "${env:SAKURA_MONITORINGSUITE_METRICS_ENDPOINT}"
-    # Authorization ヘッダを付与します｡
-    headers:
-      Authorization: "Bearer ${env:SAKURA_MONITORINGSUITE_METRICS_CREDENTIALS}"
-    # all the resource attributes will be converted to metric labels by default.
-    resource_to_telemetry_conversion:
-      enabled: true
-    tls:
-      insecure: ${env:TLS_INSECURE:-false} # テスト用
-    # ラベルを prometheusremotewrite で付与することも可能
-    external_labels:
-      region: "tokyo"
+  # https://github.com/sacloud/sacloud-otel-collector/blob/main/exporter/sacloudexporter/README.md
+  sacloud:
+    metrics:
+      endpoint: "${env:SACLOUD_METRICS_ENDPOINT}"
+      token: "${env:SACLOUD_METRICS_TOKEN}"
 
 
 service:
@@ -56,4 +47,4 @@ service:
         - resource/add_attr
         - batch
       exporters:
-        - prometheusremotewrite/metrics
+        - sacloud

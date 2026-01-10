@@ -2,8 +2,8 @@ services:
   otelcol:
     image: ghcr.io/sacloud/sacloud-otel-collector:v0.5.1
     environment:
-      - SAKURA_MONITORINGSUITE_LOGS_ENDPOINT
-      - SAKURA_MONITORINGSUITE_LOGS_CREDENTIALS
+      - SACLOUD_LOGS_ENDPOINT
+      - SACLOUD_LOGS_TOKEN
     volumes:
       - ./otelcol-config.yaml:/etc/otelcol/config.yaml:ro
       - nginx_logs:/var/log/nginx/:ro
