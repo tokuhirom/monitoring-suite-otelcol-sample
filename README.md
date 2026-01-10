@@ -23,12 +23,28 @@
 
 ファイルの中身は以下のように記述します｡
 
-```ini
-SAKURA_MONITORINGSUITE_METRICS_ENDPOINT=https://***.metrics.monitoring.global.api.sacloud.jp/prometheus
-SAKURA_MONITORINGSUITE_METRICS_CREDENTIALS=met-***-***
+このサンプルでは sacloud exporter を使用しています｡エンドポイント ID (12桁の数字) のみを指定すれば､自動的に完全な URL に展開されます｡
 
-SAKURA_MONITORINGSUITE_LOGS_ENDPOINT=***.logs.monitoring.global.api.sacloud.jp
-SAKURA_MONITORINGSUITE_LOGS_CREDENTIALS=log-***-***
+```ini
+# メトリクス設定
+SACLOUD_METRICS_ENDPOINT=123456789012
+SACLOUD_METRICS_TOKEN=met-***-***
+
+# ログ設定
+SACLOUD_LOGS_ENDPOINT=123456789012
+SACLOUD_LOGS_TOKEN=log-***-***
+```
+
+また､完全な URL を指定することも可能です｡
+
+```ini
+# メトリクス設定（URL形式）
+SACLOUD_METRICS_ENDPOINT=https://123456789012.metrics.monitoring.global.api.sacloud.jp/prometheus/api/v1/write
+SACLOUD_METRICS_TOKEN=met-***-***
+
+# ログ設定（URL形式）
+SACLOUD_LOGS_ENDPOINT=https://123456789012.logs.monitoring.global.api.sacloud.jp
+SACLOUD_LOGS_TOKEN=log-***-***
 ```
 
 ## 実装済みのサンプル

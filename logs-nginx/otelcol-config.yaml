@@ -77,15 +77,11 @@ processors:
 
 exporters:
   # ログの exporter
-  # https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/otlphttpexporter/README.md
-  otlphttp/logs:
-    # endpoint にパスが不要なことに注意｡otelcol が自動的に /v1/logs を追加してリクエストします｡
-    endpoint: "https://${SAKURA_MONITORINGSUITE_LOGS_ENDPOINT}"
-    # Authorization ヘッダを付与します｡
-    # ref. https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/extension/basicauthextension/README.md
-    headers:
-      Authorization: "Bearer ${SAKURA_MONITORINGSUITE_LOGS_CREDENTIALS}"
-    timeout: 30s
+  # https://github.com/sacloud/sacloud-otel-collector/blob/main/exporter/sacloudexporter/README.md
+  sacloud:
+    logs:
+      endpoint: "${SACLOUD_LOGS_ENDPOINT}"
+      token: "${SACLOUD_LOGS_TOKEN}"
 
   debug:
     verbosity: detailed
@@ -106,7 +102,7 @@ service:
         - transform/set_accesslog_name
         - batch
       exporters:
-        - otlphttp/logs
+        - sacloud
 
     logs/nginx_errorlog:
       receivers:
@@ -116,4 +112,4 @@ service:
         - transform/set_errorlog_name
         - batch
       exporters:
-        - otlphttp/logs
+        - sacloud

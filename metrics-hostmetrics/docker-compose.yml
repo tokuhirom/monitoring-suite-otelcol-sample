@@ -2,9 +2,8 @@ services:
   otelcol:
     image: ghcr.io/sacloud/sacloud-otel-collector:v0.5.1
     environment:
-      - SAKURA_MONITORINGSUITE_METRICS_ENDPOINT
-      - SAKURA_MONITORINGSUITE_METRICS_CREDENTIALS
-      - TLS_INSECURE
+      - SACLOUD_METRICS_ENDPOINT
+      - SACLOUD_METRICS_TOKEN
     volumes:
       - ./otelcol-config.yaml:/etc/otelcol/config.yaml:ro
     command: ["--config", "/etc/otelcol/config.yaml"]
