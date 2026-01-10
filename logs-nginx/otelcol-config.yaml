@@ -16,7 +16,7 @@ receivers:
           parse_from: body["time"]
           layout_type: strptime
           layout: '%Y-%m-%dT%H:%M:%S%j'
-          # location: Asia/Tokyo
+          location: Asia/Tokyo
 
   filelog/nginx_errorlog:
     include:
