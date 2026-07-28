@@ -1,6 +1,6 @@
 services:
   otelcol:
-    image: ghcr.io/sacloud/sacloud-otel-collector:v0.5.1
+    image: ghcr.io/sacloud/sacloud-otel-collector:v0.7.6
     environment:
       - SAKURA_MONITORINGSUITE_LOGS_ENDPOINT
       - SAKURA_MONITORINGSUITE_LOGS_CREDENTIALS
@@ -24,7 +24,7 @@ services:
       - otelcol
 
   otlp-receiver:
-    image: ghcr.io/sacloud/sacloud-otel-collector:v0.5.1
+    image: ghcr.io/sacloud/sacloud-otel-collector:v0.7.6
     volumes:
       - ../tests/otlp-receiver-otelcol-config.yaml:/etc/otelcol/config.yaml:ro
       - filelogs:/filelogs
