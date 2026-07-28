@@ -1,6 +1,6 @@
 services:
   otelcol:
-    image: ghcr.io/sacloud/sacloud-otel-collector:v0.5.1
+    image: ghcr.io/sacloud/sacloud-otel-collector:v0.7.6
     environment:
       - SAKURA_MONITORINGSUITE_METRICS_ENDPOINT
       - SAKURA_MONITORINGSUITE_METRICS_CREDENTIALS
